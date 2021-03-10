@@ -1,24 +1,65 @@
 {
+  "professores": [
+    {
+      "id": 1,
+      "nome": "Peterson"
+    },
+    {
+      "id": 2,
+      "nome": "Maria"
+    },
+    {
+      "id": 3,
+      "nome": "João"
+    }
+  ],
   "alunos": [
     {
       "id": 1,
-      "nome": "Peterson",
-      "sobrenome": "Xavier"
+      "nome": "Peterson ",
+      "sobrenome": "Xavier",
+      "dataNasc": "01/02/2000",
+      "professor": {
+        "id": 2,
+        "nome": "Maria"
+      }
     },
     {
       "id": 2,
       "nome": "André",
-      "sobrenome": "Silva"
+      "sobrenome": "Silva",
+      "professor": {
+        "id": 1,
+        "nome": "Peterson"
+      }
     },
     {
-      "nome": "pedro",
-      "sobrenome": "",
-      "id": 5
+      "id": 5,
+      "nome": "Pedro",
+      "sobrenome": "da Silva",
+      "dataNasc": "01/01/2000",
+      "professor": {
+        "id": 3,
+        "nome": "João"
+      }
     },
     {
-      "nome": "caio",
+      "id": 6,
+      "nome": "Caio",
+      "sobrenome": "Santos",
+      "professor": {
+        "id": 2,
+        "nome": "Maria"
+      }
+    },
+    {
+      "nome": "Teste",
       "sobrenome": "",
-      "id": 6
+      "professor": {
+        "id": 3,
+        "nome": "João"
+      },
+      "id": 7
     }
   ]
 }

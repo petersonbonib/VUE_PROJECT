@@ -1,7 +1,7 @@
 <template>
   <div>
-    <titulo texto="Aluno"/>
-    <div>
+    <titulo :texto="professorId != undefined ? 'Professor: ' + professor.nome : 'Todos os alunos'"/>
+    <div v-if="professorId != undefined">
       <input type="text" placeholder="Nome do aluno" v-model="nome"
       @keyup.enter="addAluno()">
       <button class="btn btnInput" @click="addAluno()">Adicionar</button>
@@ -15,9 +15,11 @@
        </thead>
        <tbody v-if="alunos.length">
          <tr v-for="(aluno, index) in alunos" :key="index">
-           <td>{{aluno.id}}</td>
-           <td>{{aluno.nome}} {{aluno.sobrenome}}</td>
-           <td>
+           <td class="colPequeno">{{aluno.id}}</td>
+           <router-link :to="`/alunodetalhe/${aluno.id}`" tag="td" style="cursor: pointer">
+             {{aluno.nome}} {{aluno.sobrenome}}
+           </router-link>
+           <td class="colPequeno">
              <button class="btn btn-danger" @click="remover(aluno)">Remover</button>
            </td>
          </tr>
@@ -40,14 +42,24 @@ export default {
   data() {
     return {
       titulo: 'Aluno',
+      professorId: this.$route.params.prof_id,
+      professor: {
+      },
       nome: '',
       alunos: []
     }
   },
-  created() {
-    this.$http.get('http://localhost:3000/alunos')
-    .then(res => res.json())
-    .then(alunos => this.alunos = alunos)
+  created() {    
+    if (this.professorId) {
+      this.carregarProfessores();
+      this.$http.get(`http://localhost:3000/alunos?professor.id=${this.professorId}`)
+        .then(res => res.json())
+        .then(alunos => this.alunos = alunos)
+    } else {
+      this.$http.get('http://localhost:3000/alunos')
+        .then(res => res.json())
+        .then(alunos => this.alunos = alunos)
+    }    
   },
   props: {
   },
@@ -55,7 +67,11 @@ export default {
     addAluno() {
       let _aluno = {
         nome: this.nome,
-        sobrenome: ""
+        sobrenome: "",
+        professor: {
+          id: this.professor.id,
+          nome: this.professor.nome
+        },
       }
 
       this.$http.post('http://localhost:3000/alunos', _aluno)
@@ -71,6 +87,13 @@ export default {
         let indice = this.alunos.indexOf(aluno);
         this.alunos.splice(indice, 1);
       })      
+    },
+    carregarProfessores() {
+      this.$http.get('http://localhost:3000/professores/' + this.professorId)
+        .then(res => res.json())
+        .then(professor => {
+          this.professor = professor;
+        })
     }
   },
 }
@@ -78,6 +101,7 @@ export default {
 
 <style scoped>
 input {
+  width: calc(100% - 195px);
   border: 0;
   padding: 20px;
   font-size: 1.3em;
@@ -85,6 +109,7 @@ input {
   display: inline;
 }
 .btnInput {
+  width: 150px;
   border: 0;
   padding: 20px;
   font-size: 1.3em;
